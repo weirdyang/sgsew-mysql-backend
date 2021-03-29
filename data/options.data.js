@@ -1,4 +1,7 @@
+/* eslint-disable no-return-await */
 const debug = require('debug')('app:options.data');
+const util = require('util');
+const { promiseConnection } = require('./mysql.data');
 const connection = require('./mysql.data');
 
 function ObjToArray(obj) {
@@ -20,12 +23,54 @@ const performQuery = (conn, query, params, reject, resolve) => {
     resolve(results);
   });
 };
+const promsifiedPerformQuery = async (query, params) => {
+  const conn = await promiseConnection();
+
+  return await util
+    .promisify(conn.query)
+    .bind(conn)(query, params);
+};
+const promisfiedGetOptions = async () => {
+  const conn = await promiseConnection();
+
+  return await util
+    .promisify(conn.query)
+    .bind(conn)('SELECT * FROM AdvertisementOptions');
+};
+
+const promisfiedGetOptionsByCompanyId = async (companyId) => await promsifiedPerformQuery(
+  'SELECT * FROM AdvertisementOptions where companyId = ?',
+  companyId,
+);
+
+const promisifiedGetOptionById = async (id) => await promsifiedPerformQuery(
+  'SELECT * FROM AdvertisementOptions where optionId = ?',
+  id,
+);
+
+const promisifiedAddOptions = async (data) => {
+  if (!data) throw new Error('data can not be null');
+  const dataToInsert = ObjToArray(data);
+  debug(dataToInsert);
+  const insertQuery = 'INSERT INTO AdvertisementOptions(optionId,companyId,audienceCount,cost) VALUES ?';
+
+  return await promsifiedPerformQuery(
+    insertQuery,
+    [dataToInsert],
+  );
+};
 const getOptions = () => new Promise((resolve, reject) => {
   connection.getConnection((err, conn) => {
     if (err) {
       reject(err);
     }
-    performQuery(conn, 'SELECT * FROM AdvertisementOptions', null, reject, resolve);
+    performQuery(
+      conn,
+      'SELECT * FROM AdvertisementOptions',
+      null,
+      reject,
+      resolve,
+    );
   });
 });
 
@@ -38,7 +83,8 @@ const getOptionsByCompanyId = (companyId) => new Promise((resolve, reject) => {
       conn,
       'SELECT * FROM AdvertisementOptions where companyId = ?',
       [companyId],
-      reject, resolve,
+      reject,
+      resolve,
     );
   });
 });
@@ -52,7 +98,8 @@ const getOptionsById = (id) => new Promise((resolve, reject) => {
       conn,
       'SELECT * FROM AdvertisementOptions where optionId = ?',
       [id],
-      reject, resolve,
+      reject,
+      resolve,
     );
   });
 });
@@ -84,4 +131,8 @@ module.exports = {
   ObjToArray,
   getOptionsByCompanyId,
   getOptionsById,
+  promisfiedGetOptions,
+  promisfiedGetOptionsByCompanyId,
+  promisifiedGetOptionById,
+  promisifiedAddOptions,
 };

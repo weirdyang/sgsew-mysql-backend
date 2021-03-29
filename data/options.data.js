@@ -13,28 +13,26 @@ function ObjToArray(obj) {
 const performQuery = (conn, query, params, reject, resolve) => {
   conn.query(query, params, (connErr, results, fields) => {
     if (connErr) {
-      reject(connErr);
+      return reject(connErr);
     }
     conn.release();
     debug(results);
-    resolve(results);
+    return resolve(results);
   });
 };
-const getOptions = () => new Promise((resolve, reject) => {
-  connection.getConnection((err, conn) => {
-    if (err) {
-      reject(err);
-    }
-    performQuery(conn, 'SELECT * FROM AdvertisementOptions', null, reject, resolve);
-  });
-});
+const getOptions = () => new Promise((resolve, reject) => connection.getConnection((err, conn) => {
+  if (err) {
+    return reject(err);
+  }
+  return performQuery(conn, 'SELECT * FROM AdvertisementOptions', null, reject, resolve);
+}));
 
 const getOptionsByCompanyId = (companyId) => new Promise((resolve, reject) => {
   connection.getConnection((err, conn) => {
     if (err) {
-      reject(err);
+      return reject(err);
     }
-    performQuery(
+    return performQuery(
       conn,
       'SELECT * FROM AdvertisementOptions where companyId = ?',
       [companyId],
@@ -46,9 +44,9 @@ const getOptionsByCompanyId = (companyId) => new Promise((resolve, reject) => {
 const getOptionsById = (id) => new Promise((resolve, reject) => {
   connection.getConnection((err, conn) => {
     if (err) {
-      reject(err);
+      return reject(err);
     }
-    performQuery(
+    return performQuery(
       conn,
       'SELECT * FROM AdvertisementOptions where optionId = ?',
       [id],
@@ -63,11 +61,11 @@ const addOptions = (data) => {
   return new Promise((resolve, reject) => {
     connection.getConnection((err, conn) => {
       if (err) {
-        reject(err);
+        return reject(err);
       }
       const insertQuery = 'INSERT INTO AdvertisementOptions(optionId,companyId,audienceCount,cost) VALUES ?';
 
-      performQuery(
+      return performQuery(
         conn,
         insertQuery,
         [dataToInsert],

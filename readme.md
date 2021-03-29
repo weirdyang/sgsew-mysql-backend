@@ -2,7 +2,7 @@
 
 1. Run `npm install`
 
-2. create a .env file in the root folder with the following:
+2. create a .env file in the root folder with the following ([ref](https://www.npmjs.com/package/dotenv)):
 
 ```
 DB_HOST=<db host>

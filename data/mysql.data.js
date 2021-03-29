@@ -1,3 +1,4 @@
+const util = require('util');
 const mysql = require('mysql');
 const config = require('../config/index');
 
@@ -18,8 +19,15 @@ const connection = function mySqlConnection() {
 
     return callback(null, conn);
   });
+
+  const promiseQuery = util.promisify(pool.query).bind(pool);
+
+  const promiseConnection = util.promisify(pool.getConnection).bind(pool);
+
   return {
     getConnection,
+    promiseQuery,
+    promiseConnection,
   };
 };
 

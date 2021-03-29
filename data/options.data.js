@@ -10,21 +10,22 @@ function ObjToArray(obj) {
     return val;
   });
 }
-
+const performQuery = (conn, query, params, reject, resolve) => {
+  conn.query(query, params, (connErr, results, fields) => {
+    if (connErr) {
+      reject(connErr);
+    }
+    conn.release();
+    debug(results);
+    resolve(results);
+  });
+};
 const getOptions = () => new Promise((resolve, reject) => {
   connection.getConnection((err, conn) => {
     if (err) {
       reject(err);
     }
-
-    return conn.query('SELECT * FROM AdvertisementOptions', (connErr, results, fields) => {
-      if (connErr) {
-        reject(connErr);
-      }
-      conn.release();
-      debug(results);
-      resolve(results);
-    });
+    performQuery(conn, 'SELECT * FROM AdvertisementOptions', null, reject, resolve);
   });
 });
 
@@ -33,31 +34,26 @@ const getOptionsByCompanyId = (companyId) => new Promise((resolve, reject) => {
     if (err) {
       reject(err);
     }
-
-    return conn.query('SELECT * FROM AdvertisementOptions where companyId = ?', [companyId], (connErr, results, fields) => {
-      if (connErr) {
-        reject(connErr);
-      }
-      conn.release();
-      debug(results);
-      resolve(results);
-    });
+    performQuery(
+      conn,
+      'SELECT * FROM AdvertisementOptions where companyId = ?',
+      [companyId],
+      reject, resolve,
+    );
   });
 });
+
 const getOptionsById = (id) => new Promise((resolve, reject) => {
   connection.getConnection((err, conn) => {
     if (err) {
       reject(err);
     }
-
-    return conn.query('SELECT * FROM AdvertisementOptions where optionId = ?', [id], (connErr, results, fields) => {
-      if (connErr) {
-        reject(connErr);
-      }
-      conn.release();
-      debug(results);
-      resolve(results);
-    });
+    performQuery(
+      conn,
+      'SELECT * FROM AdvertisementOptions where optionId = ?',
+      [id],
+      reject, resolve,
+    );
   });
 });
 const addOptions = (data) => {
@@ -71,16 +67,17 @@ const addOptions = (data) => {
       }
       const insertQuery = 'INSERT INTO AdvertisementOptions(optionId,companyId,audienceCount,cost) VALUES ?';
 
-      conn.query(insertQuery, [dataToInsert], (connErr, results, fields) => {
-        if (connErr) {
-          reject(connErr);
-        }
-        conn.release();
-        resolve(results);
-      });
+      performQuery(
+        conn,
+        insertQuery,
+        [dataToInsert],
+        reject,
+        resolve,
+      );
     });
   });
 };
+
 module.exports = {
   getOptions,
   addOptions,

@@ -39,7 +39,7 @@ router.post('/add',
       return next(new HttpError('invalid input, data passed in must be an array', 422));
     }
     try {
-      const results = await addOptions(req.body.data);
+      const results = await addOptions(req.body);
       return res.json(results);
     } catch (error) {
       return next(new HttpError(error.message, 500));

@@ -77,7 +77,7 @@ const getOptions = () => new Promise((resolve, reject) => {
 const getOptionsByCompanyId = (companyId) => new Promise((resolve, reject) => {
   connection.getConnection((err, conn) => {
     if (err) {
-      reject(err);
+      return reject(err);
     }
     return performQuery(
       conn,

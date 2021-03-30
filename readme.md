@@ -1,8 +1,8 @@
 # to install
 
-1. Run `npm install`
+## 1. Run `npm install`
 
-2. create a .env file in the root folder with the following ([ref](https://www.npmjs.com/package/dotenv)):
+## 2. Create a .env file in the root folder with the following ([ref](https://www.npmjs.com/package/dotenv)):
 
 ```
 DB_HOST=<db host>
@@ -12,7 +12,7 @@ DB_NAME=<db name>
 DB_PORT=<db port, usually is 3306>
 ```
 
-3. ensure table is created:
+## 3. Ensure table is created:
 
 ```
 CREATE TABLE AdvertisementOptions (
@@ -25,10 +25,11 @@ CREATE TABLE AdvertisementOptions (
     UNIQUE KEY (companyId,audienceCount,cost) );
 ```
 
-4. run with console logging `npm run start:debug`
+## 4. Run with console logging
 
-5. view api using swagger UI
+   `npm run start:debug`
 
-Navigate to `localhost:3000/docs` to view the swagger UI.
-The path can is set in app.js
-`require('./config/swagger')(app, '/docs')`
+## 5. View api using swagger UI
+
+   Navigate to `localhost:3000/docs` to view the swagger UI.  
+   The path is set in app.js: `require('./config/swagger')(app, '/docs')`

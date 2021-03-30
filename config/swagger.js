@@ -3,6 +3,7 @@
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
+const PORT = process.env.PORT || '3000';
 function AddSwagger(app, routePath) {
   const swaggerDefinition = {
     openapi: '3.0.0',
@@ -17,12 +18,12 @@ function AddSwagger(app, routePath) {
       },
       contact: {
         name: 'SGSEW MySQL backend',
-        url: 'https://jsonplaceholder.typicode.com',
+        url: 'https://github.com/weirdyang/sgsew-mysql-backend',
       },
     },
     servers: [
       {
-        url: 'https://github.com/weirdyang/sgsew-mysql-backend',
+        url: `http://localhost:${PORT}`,
         description: 'Development server',
       },
     ],

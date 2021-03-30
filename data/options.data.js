@@ -1,7 +1,7 @@
 /* eslint-disable no-return-await */
 const debug = require('debug')('app:options.data');
 const util = require('util');
-const { promiseConnection } = require('./mysql.data');
+const { promiseConnection, promiseQuery } = require('./mysql.data');
 const connection = require('./mysql.data');
 
 function ObjToArray(obj) {
@@ -26,17 +26,24 @@ const performQuery = (conn, query, params, reject, resolve) => {
 const promsifiedPerformQuery = async (query, params) => {
   const conn = await promiseConnection();
 
-  return await util
+  const results = await util
     .promisify(conn.query)
     .bind(conn)(query, params);
-};
-const promisfiedGetOptions = async () => {
-  const conn = await promiseConnection();
 
-  return await util
-    .promisify(conn.query)
-    .bind(conn)('SELECT * FROM AdvertisementOptions');
+  conn.release();
+  return results;
 };
+
+// https://github.com/mysqljs/mysql/blob/master/lib/Pool.js
+// this is the shortcut of promisifedPerformQuery
+// it is the equivalent of:
+// pool.getConnection() -> connection.query() -> connection.release() code flow.
+const promsifiedPoolQuery = async (query, params) => await promiseQuery(query, params);
+
+// demo to show the different method to query
+const promisfiedGetOptions = async () => promsifiedPoolQuery(
+  'SELECT * FROM AdvertisementOptions',
+);
 
 const promisfiedGetOptionsByCompanyId = async (companyId) => await promsifiedPerformQuery(
   'SELECT * FROM AdvertisementOptions where companyId = ?',

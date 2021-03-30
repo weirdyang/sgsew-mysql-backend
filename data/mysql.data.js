@@ -1,5 +1,6 @@
 const util = require('util');
 const mysql = require('mysql');
+const debug = require('debug')('app:data:mysql');
 const config = require('../config/index');
 
 const connection = function mySqlConnection() {
@@ -11,7 +12,9 @@ const connection = function mySqlConnection() {
     password: config.database.password,
     database: config.database.databaseName,
   });
-
+  pool.on('release', (conn) => {
+    debug('Connection %d released', conn.threadId);
+  });
   const getConnection = (callback) => pool.getConnection((err, conn) => {
     if (err) {
       return callback(err, null);

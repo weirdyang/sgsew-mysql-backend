@@ -23,6 +23,10 @@ const performQuery = (conn, query, params, reject, resolve) => {
     return resolve(results);
   });
 };
+
+// Using pool.getConnection() is useful to share connection state for subsequent queries.
+// This is because two calls to pool.query() may use two different connections and run in parallel.
+// pool.getConnection() -> connection.query() -> connection.release()
 const promsifiedPerformQuery = async (query, params) => {
   const conn = await promiseConnection();
 
@@ -45,7 +49,7 @@ const promisfiedGetOptions = async () => promsifiedPoolQuery(
   'SELECT * FROM AdvertisementOptions',
 );
 
-const promisfiedGetOptionsByCompanyId = async (companyId) => await promsifiedPerformQuery(
+const promisfiedGetOptionsByCompanyId = async (companyId) => await promsifiedPoolQuery(
   'SELECT * FROM AdvertisementOptions where companyId = ?',
   companyId,
 );
@@ -61,7 +65,7 @@ const promisifiedAddOptions = async (data) => {
   debug(dataToInsert);
   const insertQuery = 'INSERT INTO AdvertisementOptions(optionId,companyId,audienceCount,cost) VALUES ?';
 
-  return await promsifiedPerformQuery(
+  return await promsifiedPoolQuery(
     insertQuery,
     [dataToInsert],
   );

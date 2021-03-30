@@ -44,7 +44,7 @@ const promsifiedPerformQuery = async (query, params) => {
 // pool.getConnection() -> connection.query() -> connection.release() code flow.
 const promsifiedPoolQuery = async (query, params) => await promiseQuery(query, params);
 
-// demo to show the different method to query
+// demo to show the querying by promsifiedPoolQuery
 const promisfiedGetOptions = async () => promsifiedPoolQuery(
   'SELECT * FROM AdvertisementOptions',
 );
@@ -54,6 +54,7 @@ const promisfiedGetOptionsByCompanyId = async (companyId) => await promsifiedPoo
   companyId,
 );
 
+// demo to show querying by promsifiedPerformQuery
 const promisifiedGetOptionById = async (id) => await promsifiedPerformQuery(
   'SELECT * FROM AdvertisementOptions where optionId = ?',
   id,

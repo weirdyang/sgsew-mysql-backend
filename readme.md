@@ -26,3 +26,9 @@ CREATE TABLE AdvertisementOptions (
 ```
 
 4. run with console logging `npm run start:debug`
+
+5. view api using swagger UI
+
+Navigate to `localhost:3000/docs` to view the swagger UI.
+The path can is set in app.js
+`require('./config/swagger')(app, '/docs')`

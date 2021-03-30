@@ -19,6 +19,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/options', optionsRouter);
+require('./config/swagger')(app, '/docs');
 // error for unsupported routes (which we dont want to handle)
 app.use((req, res, next) => {
   const error = new HttpError('Could not find this route', 404);
@@ -41,4 +42,5 @@ app.use((error, req, res, next) => {
   res.status(500);
   return res.json({ message: error.message || 'An unknown error occured!' });
 });
+
 module.exports = app;

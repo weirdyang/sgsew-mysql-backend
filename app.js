@@ -16,9 +16,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+const views = path.join(__dirname, 'views');
+app.set('views', views);
 
 app.use('/', indexRouter);
 app.use('/options', optionsRouter);
+app.get('/test', (req, res) => res.sendFile(path.join(views, 'test.html')));
 require('./config/swagger')(app, '/docs');
 // error for unsupported routes (which we dont want to handle)
 app.use((req, res, next) => {

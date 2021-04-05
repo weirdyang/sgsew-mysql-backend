@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css" />
+
+</head>
+<style>
+    body {
+        padding: 5px
+    }
+
+    .display-card {
+        padding: 5px;
+        margin: 5px;
+    }
+</style>
+
+<body class="container">
+    <button id="getOptionsButton">Retrieve options</button>
+    <article id="main" class="row columns is-multiline">
+
+    </article>
+
+</body>
+<script defer>
+    (function () {
+        const getButton = document.getElementById('getOptionsButton');
+        const display = document.getElementById('main');
+        getButton.addEventListener('click', async () => {
+            const response = await fetch('/options', {
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                headers: {
+                    'Content-Type': 'application/json'
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            });
+            const data = await response.json();
+            console.log(data);
+            for (const option of data) {
+                var node = document.createElement("div");
+                node.classList.add('column', 'is-4')
+                const template =
+                    `
+<div class="card display-card">
+    <div class="field">
+        <label class="label">Option Id</label>
+        <div class="control">
+            <input readonly class="input" type="text" placeholder="Text input" value="${option.optionId}">
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Company Id</label>
+        <div class="control">
+            <input readonly class="input" type="text" placeholder="Text input" value="${option.companyId}">
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Audience Count</label>
+        <div class="control">
+            <input readonly class="input" type="text" placeholder="Text input" value="${option.audienceCount}">
+        </div>
+    </div>
+    <div class="field">
+        <label class="label">Cost</label>
+        <div class="control">
+            <input readonly class="input" type="text" placeholder="Text input" value="$ ${option.cost}">
+        </div>
+    </div>
+</div>`
+
+                node.innerHTML = template;
+                main.appendChild(node);
+            }
+        })
+    }());
+</script>
+
+</html>

@@ -31,5 +31,10 @@ CREATE TABLE AdvertisementOptions (
 
 ## 5. View api using swagger UI
 
-   Navigate to `localhost:3000/docs` to view the swagger UI.  
+   Navigate to `localhost:3000/docs` to view the swagger UI.
    The path is set in app.js: `require('./config/swagger')(app, '/docs')`
+
+## 6. View example on how to retrieve data from API and render in front end using AJAX calls
+
+    Navigate to `localhost:3000/test`
+

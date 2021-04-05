@@ -34,7 +34,12 @@ CREATE TABLE AdvertisementOptions (
    Navigate to `localhost:3000/docs` to view the swagger UI.
    The path is set in app.js: `require('./config/swagger')(app, '/docs')`
 
-## 6. View example on how to retrieve data from API and render in front end using AJAX calls
+## 6. Example on how to retrieve data from API and render in front end using AJAX calls
 
-Navigate to `localhost:3000/test`
+Navigate to `localhost:3000/test`.
+
+The HTML file is located at `src/views/test.html`.
+
+The route is set in app.js:
+`app.get('/test', (req, res) => res.sendFile(path.join(views, 'test.html')));`
 

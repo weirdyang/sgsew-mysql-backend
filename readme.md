@@ -36,5 +36,5 @@ CREATE TABLE AdvertisementOptions (
 
 ## 6. View example on how to retrieve data from API and render in front end using AJAX calls
 
-    Navigate to `localhost:3000/test`
+Navigate to `localhost:3000/test`
 

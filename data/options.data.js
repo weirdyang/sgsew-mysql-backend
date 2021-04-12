@@ -1,7 +1,6 @@
 /* eslint-disable no-return-await */
 const debug = require('debug')('app:options.data');
 const util = require('util');
-const QueryBuilder = require('datatable');
 const { promiseConnection, promiseQuery } = require('./mysql.data');
 const connection = require('./mysql.data');
 
@@ -137,25 +136,30 @@ const addOptions = (data) => {
     });
   });
 };
+
+const buildSearch = require('./datatable');
+
 const perfromDatatableQueries = async (request) => {
-  const tableDefinition = {
-    sTableName: 'AdvertisementOptions',
-    sCountColumnName: 'optionId',
-  };
-  const queryBuilder = new QueryBuilder(tableDefinition);
-  const queries = queryBuilder.buildQuery(request);
+  const queries = buildSearch(request, 'AdvertisementOptions', 'optionId');
   // first set the database
   // await promsifiedPoolQuery(queries.changeDatabaseOrSchema);
-  const [recordsTotal, select] = await Promise.all(
+  // debug(request);
+  debug(queries);
+  const [recordsTotalCount, select, recordsFilteredCount] = await Promise.all(
     [
-      await promsifiedPoolQuery(queries.recordsTotal),
-      await promsifiedPoolQuery(queries.select),
+      await promsifiedPerformQuery(queries.recordsTotalCount),
+      await promsifiedPerformQuery(queries.selectQuery),
+      await promsifiedPerformQuery(queries.recordsFilteredCount),
     ],
   );
-  return queryBuilder.parseResponse({
-    recordsTotal,
-    select,
-  });
+  debug(recordsTotalCount[0].TOTAL);
+  debug(recordsFilteredCount[0].TOTAL);
+  return {
+    draw: parseInt(request.draw, 10),
+    recordsTotal: recordsTotalCount[0].TOTAL,
+    recordsFiltered: recordsFilteredCount[0].TOTAL,
+    data: select,
+  };
 };
 module.exports = {
   getOptions,

@@ -50,17 +50,18 @@
                 "serverSide": true,
                 "processing": true,
                 "ajax": {
-                    url: "/options/datatable",
-                    type: "POST",
+                    url: "/options/table/datatable",
+                    type: "post",
                 },
                 columns: [
-                    { data: 'optionId' },
-                    { data: 'companyId' },
-                    { data: 'audienceCount' },
+                    { data: 'optionId', name: 'optionId', searchable: true },
+                    { data: 'companyId', name: 'companyId', searchable: true },
+                    { data: 'audienceCount', name: 'audienceCount', searchable: true },
                     {
                         data: function (item) {
                             return `$${item.cost}`;
-                        }
+                        },
+                        name: 'cost',
                     },
                 ],
             });

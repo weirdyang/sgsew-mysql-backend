@@ -43,3 +43,9 @@ The HTML file is located at `src/views/test.html`.
 The route is set in app.js:
 `app.get('/test', (req, res) => res.sendFile(path.join(views, 'test.html')));`
 
+
+### 7. Datatables rendering
+
+For server-side, check out `/server-datatable`
+
+For pure ajax, check out `/datatable`

@@ -4,6 +4,7 @@ const {
   promisfiedGetOptions,
   promisfiedGetOptionsByCompanyId,
   promisifiedAddOptions,
+  perfromDatatableQueries,
 } = require('../data/options.data');
 const HttpError = require('../models/HttpError');
 
@@ -218,4 +219,11 @@ router.post('/add',
     }
   });
 
+router.post('/datatable',
+  async (req, res, next) => {
+    const { draw } = req.body;
+    const reply = await perfromDatatableQueries(req);
+    reply.draw = draw;
+    return res.json(reply);
+  });
 module.exports = router;

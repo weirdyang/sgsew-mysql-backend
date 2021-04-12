@@ -1,6 +1,7 @@
 /* eslint-disable no-return-await */
 const debug = require('debug')('app:options.data');
 const util = require('util');
+const QueryBuilder = require('datatable');
 const { promiseConnection, promiseQuery } = require('./mysql.data');
 const connection = require('./mysql.data');
 
@@ -136,7 +137,26 @@ const addOptions = (data) => {
     });
   });
 };
-
+const perfromDatatableQueries = async (request) => {
+  const tableDefinition = {
+    sTableName: 'AdvertisementOptions',
+    sCountColumnName: 'optionId',
+  };
+  const queryBuilder = new QueryBuilder(tableDefinition);
+  const queries = queryBuilder.buildQuery(request);
+  // first set the database
+  // await promsifiedPoolQuery(queries.changeDatabaseOrSchema);
+  const [recordsTotal, select] = await Promise.all(
+    [
+      await promsifiedPoolQuery(queries.recordsTotal),
+      await promsifiedPoolQuery(queries.select),
+    ],
+  );
+  return queryBuilder.parseResponse({
+    recordsTotal,
+    select,
+  });
+};
 module.exports = {
   getOptions,
   addOptions,
@@ -147,4 +167,5 @@ module.exports = {
   promisfiedGetOptionsByCompanyId,
   promisifiedGetOptionById,
   promisifiedAddOptions,
+  perfromDatatableQueries,
 };

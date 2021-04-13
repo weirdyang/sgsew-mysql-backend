@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/1.2.1/css/searchPanes.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css">
+    <script src="https://cdn.datatables.net/searchpanes/1.2.1/js/dataTables.searchPanes.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+
+</head>
+<style>
+    .container {
+        margin: auto;
+        padding: 20px;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <table id="example" class="display compact" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Company ID</th>
+                    <th>Audience Count</th>
+                    <th>Cost</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>ID</th>
+                    <th>Company ID</th>
+                    <th>Audience Count</th>
+                    <th>Cost</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable({
+                "serverSide": true,
+                "processing": true,
+                "ajax": {
+                    url: "/options/table/datatable",
+                    type: "post",
+                },
+                columns: [
+                    { data: 'optionId', name: 'optionId', searchable: true },
+                    { data: 'companyId', name: 'companyId', searchable: true },
+                    { data: 'audienceCount', name: 'audienceCount', searchable: true },
+                    {
+                        data: function (item) {
+                            return `$${item.cost}`;
+                        },
+                        name: 'cost',
+                    },
+                ],
+            });
+        });
+    </script>
+</body>
+
+</html>

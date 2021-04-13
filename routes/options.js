@@ -1,9 +1,11 @@
 const express = require('express');
+const debug = require('debug')('app:options:router');
 const {
   promisifiedGetOptionById,
   promisfiedGetOptions,
   promisfiedGetOptionsByCompanyId,
   promisifiedAddOptions,
+  perfromDatatableQueries,
 } = require('../data/options.data');
 const HttpError = require('../models/HttpError');
 
@@ -218,4 +220,15 @@ router.post('/add',
     }
   });
 
+router.post('/table/datatable',
+  async (req, res, next) => {
+    try {
+      const reply = await perfromDatatableQueries(req.body);
+      debug(reply);
+      return res.json(reply);
+    } catch (error) {
+      debug(error);
+      return next(error);
+    }
+  });
 module.exports = router;

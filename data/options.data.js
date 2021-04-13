@@ -137,6 +137,30 @@ const addOptions = (data) => {
   });
 };
 
+const buildSearch = require('./datatable');
+
+const perfromDatatableQueries = async (request) => {
+  const queries = buildSearch(request, 'AdvertisementOptions', 'optionId');
+  // first set the database
+  // await promsifiedPoolQuery(queries.changeDatabaseOrSchema);
+  // debug(request);
+  debug(queries);
+  const [recordsTotalCount, select, recordsFilteredCount] = await Promise.all(
+    [
+      await promsifiedPerformQuery(queries.recordsTotalCount),
+      await promsifiedPerformQuery(queries.selectQuery),
+      await promsifiedPerformQuery(queries.recordsFilteredCount),
+    ],
+  );
+  debug(recordsTotalCount[0].TOTAL);
+  debug(recordsFilteredCount[0].TOTAL);
+  return {
+    draw: parseInt(request.draw, 10),
+    recordsTotal: recordsTotalCount[0].TOTAL,
+    recordsFiltered: recordsFilteredCount[0].TOTAL,
+    data: select,
+  };
+};
 module.exports = {
   getOptions,
   addOptions,
@@ -147,4 +171,5 @@ module.exports = {
   promisfiedGetOptionsByCompanyId,
   promisifiedGetOptionById,
   promisifiedAddOptions,
+  perfromDatatableQueries,
 };

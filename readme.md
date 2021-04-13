@@ -48,4 +48,41 @@ The route is set in app.js:
 
 For server-side, check out `/server-datatable`
 
+To ensure server-side `POST` works, ensure this is the `express.urencoded()` extended property is set to true:
+
+`app.use(express.urlencoded({ extended: true }));`
+
+#### Sample route to handle post
+```javascript
+router.post('/table/datatable',
+  async (req, res, next) => {
+    try {
+      const reply = await perfromDatatableQueries(req.body);
+      debug(reply);
+      return res.json(reply);
+    } catch (error) {
+      debug(error);
+      return next(error);
+    }
+  });
+```
+#### Sample route to handle get
+```javascript
+router.get('/table/datatable',
+  async (req, res, next) => {
+    try {
+      const reply = await perfromDatatableQueries(req.query);
+      debug(reply);
+      return res.json(reply);
+    } catch (error) {
+      debug(error);
+      return next(error);
+    }
+  });
+```
+
+The easiest implementation for server-side processing will be to use [datatables.net-editor](https://www.npmjs.com/package/datatables.net-editor), which also supports [search panes with server side processing](https://datatables.net/blog/2020-05-12)
+
 For pure ajax, check out `/datatable`
+
+

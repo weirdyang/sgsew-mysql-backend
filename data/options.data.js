@@ -1,8 +1,7 @@
 /* eslint-disable no-return-await */
 const debug = require('debug')('app:options.data');
 const util = require('util');
-const { promiseConnection, promiseQuery } = require('./mysql.data');
-const connection = require('./mysql.data');
+const { promiseConnection, promiseQuery, getConnection } = require('./mysql.data');
 
 function ObjToArray(obj) {
   const arr = obj instanceof Array;
@@ -72,7 +71,7 @@ const promisifiedAddOptions = async (data) => {
   );
 };
 const getOptions = () => new Promise((resolve, reject) => {
-  connection.getConnection((err, conn) => {
+  getConnection((err, conn) => {
     if (err) {
       reject(err);
     }
@@ -87,7 +86,7 @@ const getOptions = () => new Promise((resolve, reject) => {
 });
 
 const getOptionsByCompanyId = (companyId) => new Promise((resolve, reject) => {
-  connection.getConnection((err, conn) => {
+  getConnection((err, conn) => {
     if (err) {
       return reject(err);
     }
@@ -102,7 +101,7 @@ const getOptionsByCompanyId = (companyId) => new Promise((resolve, reject) => {
 });
 
 const getOptionsById = (id) => new Promise((resolve, reject) => {
-  connection.getConnection((err, conn) => {
+  getConnection((err, conn) => {
     if (err) {
       return reject(err);
     }
@@ -120,7 +119,7 @@ const addOptions = (data) => {
   const dataToInsert = ObjToArray(data);
   debug(dataToInsert);
   return new Promise((resolve, reject) => {
-    connection.getConnection((err, conn) => {
+    getConnection((err, conn) => {
       if (err) {
         return reject(err);
       }
